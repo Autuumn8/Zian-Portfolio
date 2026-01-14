@@ -294,43 +294,53 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
           </div>
 
           <div className="profile-actions">
-            <button
-              className="btn btn-primary"
-              onClick={() => window.downloadResume?.()}
-            >
-              <i className="fas fa-download"></i> Download Resume
-            </button>
+ <button
+  className="btn btn-primary"
+  onClick={() => {
+    const link = document.createElement("a");
+    link.href = "/Zian-Portfolio/Zian_Resume.pdf"; // correct path
+    link.download = "Zian_Resume.pdf"; // sets filename for download
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }}
+>
+  <i className="fas fa-download"></i> Download Resume
+</button>
 
-            <div className="social-links">
-              <a
-                href="https://www.facebook.com/znxxlfnso"
-                className="social-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a
-                href="https://github.com/Autuumn8"
-                className="social-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="fab fa-github"></i>
-              </a>
-              <a href="mailto:zianalfonso0518@gmail.com" className="social-link">
-                <i className="fas fa-envelope"></i>
-              </a>
-              <a
-                href="https://instagram.com/znxxlfnso"
-                className="social-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
-            </div>
-          </div>
+
+
+  <div className="social-links">
+    <a
+      href="https://www.facebook.com/znxxlfnso"
+      className="social-link"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <i className="fab fa-facebook-f"></i>
+    </a>
+    <a
+      href="https://github.com/Autuumn8"
+      className="social-link"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <i className="fab fa-github"></i>
+    </a>
+    <a href="mailto:zianalfonso0518@gmail.com" className="social-link">
+      <i className="fas fa-envelope"></i>
+    </a>
+    <a
+      href="https://instagram.com/znxxlfnso"
+      className="social-link"
+      target="_blank"
+      rel="noreferrer"
+    >
+      <i className="fab fa-instagram"></i>
+    </a>
+  </div>
+</div>
+
         </div>
       </div>
     </aside>
