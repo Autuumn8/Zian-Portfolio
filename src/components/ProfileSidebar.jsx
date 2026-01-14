@@ -298,8 +298,8 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
   className="btn btn-primary"
   onClick={() => {
     const link = document.createElement("a");
-    link.href = "/Zian-Portfolio/Zian_Resume.pdf"; // correct path
-    link.download = "Zian_Resume.pdf"; // sets filename for download
+    link.href = "/Zian-Portfolio/Zian_Resume.pdf"; 
+    link.download = "Zian_Resume.pdf"; 
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
