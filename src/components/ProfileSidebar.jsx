@@ -48,7 +48,6 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
   /* ===================== Swipe Functionality ===================== */
   useEffect(() => {
     let startX = 0;
-    let isSwiping = false;
 
     const onTouchStart = (e) => {
       startX = e.touches[0].clientX;
@@ -59,18 +58,16 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
       const diff = currentX - startX;
 
       // Open sidebar if swipe right from left edge
-      if (!open && startX < 20 && diff > 50) {
+      if (!open && startX < 60 && diff > 50) {
         onOpen?.();
-        isSwiping = true;
       }
 
       // Close sidebar if swipe left
       if (open && diff < -50) {
         onClose?.();
-        isSwiping = true;
       }
 
-      // Add swiping class for animation
+      // Swiping visual feedback
       if (swipeRef.current) {
         if (Math.abs(diff) > 10) swipeRef.current.classList.add("swiping");
         else swipeRef.current.classList.remove("swiping");
@@ -79,7 +76,6 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
 
     const onTouchEnd = () => {
       if (swipeRef.current) swipeRef.current.classList.remove("swiping");
-      isSwiping = false;
     };
 
     document.addEventListener("touchstart", onTouchStart);
