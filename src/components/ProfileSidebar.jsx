@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import profileImg from "../assets/PROFILE.jpg";
 
 export default function ProfileSidebar({ open, onClose, onOpen }) {
   const [showInterests, setShowInterests] = useState(false);
 
-  // Overlay click
   useEffect(() => {
     let overlay = document.querySelector(".sidebar-overlay");
     if (!overlay) {
@@ -18,7 +17,6 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     return () => overlay.removeEventListener("click", onOverlayClick);
   }, [onClose]);
 
-  // Escape key to close
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape" && open) onClose?.();
@@ -27,7 +25,6 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  // Open/close sidebar
   useEffect(() => {
     const sidebar = document.querySelector(".profile-sidebar");
     const overlay = document.querySelector(".sidebar-overlay");
@@ -37,18 +34,16 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
       sidebar.classList.add("open");
       overlay?.classList.add("show");
       document.body.style.overflow = "hidden";
-      sidebar.style.transform = "translateX(0)"; // Reset transform
     } else {
       sidebar.classList.remove("open");
       overlay?.classList.remove("show");
       document.body.style.overflow = "auto";
-      sidebar.style.transform = "translateX(-100%)";
     }
   }, [open]);
 
-  /* ================= SWIPE-TO-CLOSE ONLY ================= */
+  /* ================= SWIPE SUPPORT ================= */
   useEffect(() => {
-    // Only on touch devices
+    // Only run swipe logic on touch devices
     if (!("ontouchstart" in window)) return;
 
     const sidebar = document.querySelector(".profile-sidebar");
@@ -59,8 +54,6 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     let swiping = false;
 
     const handleTouchStart = (e) => {
-      // Only start swipe if sidebar is open
-      if (!open) return;
       touchStartX = e.touches[0].clientX;
       touchCurrentX = touchStartX;
       swiping = true;
@@ -72,10 +65,11 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
       touchCurrentX = e.touches[0].clientX;
       const deltaX = touchCurrentX - touchStartX;
 
-      // Swiping left to close
-      if (deltaX < 0) {
-        sidebar.style.transform = `translateX(${deltaX}px)`;
+      if (open) {
+        // Only allow swiping left to close
+        if (deltaX < 0) sidebar.style.transform = `translateX(${deltaX}px)`;
       }
+      // Do not allow left-to-right swipe to open
     };
 
     const handleTouchEnd = () => {
@@ -84,10 +78,11 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
       sidebar.style.transition = "transform 0.3s ease"; // restore transition
       const deltaX = touchCurrentX - touchStartX;
 
-      if (deltaX < -80) {
-        onClose?.();
+      if (open) {
+        if (deltaX < -80) onClose?.();
+        else sidebar.style.transform = "translateX(0)";
       } else {
-        sidebar.style.transform = "translateX(0)";
+        sidebar.style.transform = "translateX(-100%)";
       }
     };
 
@@ -101,6 +96,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
       window.removeEventListener("touchend", handleTouchEnd);
     };
   }, [open, onClose]);
+
   /* ================================================= */
 
   const interests = [
@@ -300,8 +296,8 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
               className="btn btn-primary"
               onClick={() => {
                 const link = document.createElement("a");
-                link.href = "/Zian-Portfolio/Zian_Resume.pdf";
-                link.download = "Zian_Resume.pdf";
+                link.href = "/Zian-Portfolio/Zian_Resume.pdf"; 
+                link.download = "Zian_Resume.pdf"; 
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
@@ -340,6 +336,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
               </a>
             </div>
           </div>
+
         </div>
       </div>
     </aside>
