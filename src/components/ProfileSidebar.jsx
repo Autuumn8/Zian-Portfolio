@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import profileImg from "../assets/PROFILE.jpg";
 
-export default function ProfileSidebar({ open, onClose }) {
+export default function ProfileSidebar({ open, onClose, onOpen }) {
   const [showInterests, setShowInterests] = useState(false);
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     let overlay = document.querySelector(".sidebar-overlay");
@@ -40,6 +43,41 @@ export default function ProfileSidebar({ open, onClose }) {
       document.body.style.overflow = "auto";
     }
   }, [open]);
+
+  /* ================= SWIPE SUPPORT ================= */
+  useEffect(() => {
+    const handleTouchStart = (e) => {
+      touchStartX.current = e.changedTouches[0].screenX;
+    };
+
+    const handleTouchEnd = (e) => {
+      touchEndX.current = e.changedTouches[0].screenX;
+      handleSwipe();
+    };
+
+    const handleSwipe = () => {
+      const distance = touchEndX.current - touchStartX.current;
+
+      // swipe left → close
+      if (open && distance < -80) {
+        onClose?.();
+      }
+
+      // swipe right → open
+      if (!open && distance > 80) {
+        onOpen?.();
+      }
+    };
+
+    window.addEventListener("touchstart", handleTouchStart);
+    window.addEventListener("touchend", handleTouchEnd);
+
+    return () => {
+      window.removeEventListener("touchstart", handleTouchStart);
+      window.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, [open, onClose, onOpen]);
+  /* ================================================= */
 
   const interests = [
     { icon: "music", label: "Listening to Music" },
@@ -216,8 +254,6 @@ export default function ProfileSidebar({ open, onClose }) {
             </p>
           </div>
 
-
-          {/* FREE TIME SECTION */}
           <div className="profile-interests">
             <h4 onClick={toggleInterests}>
               <span>What I Do in My Free Time</span>
@@ -245,12 +281,12 @@ export default function ProfileSidebar({ open, onClose }) {
 
             <div className="social-links">
               <a
-                href="https://linkedin.com/in/zian"
+                href="https://www.facebook.com/znxxlfnso"
                 className="social-link"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="fab fa-linkedin-in"></i>
+                <i className="fab fa-facebook-f"></i>
               </a>
               <a
                 href="https://github.com/zian"

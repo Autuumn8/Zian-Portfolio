@@ -27,20 +27,33 @@ export default function Works({ id }) {
     return () => observer.disconnect();
   }, []);
 
-  // 🔥 GLOBAL MODAL OPENER
+  // 🔥 GLOBAL MODAL OPENER (IMAGES ONLY)
   const openModal = (projectId) => {
     if (window.viewProject) {
       window.viewProject(projectId);
     }
   };
 
-  const handleDownloadDorm = () => {
-    if (window.confirm("Are you sure you want to open the DormHonorio build?")) {
-      window.open(
-        "https://expo.dev/accounts/dormhonorio/projects/DormHonorio/builds/c1ed1458-80b9-4c51-859a-db290f1ba7e5",
-        "_blank"
-      );
+  // 🔔 TOAST + EXTERNAL LINK HANDLER
+  const openExternal = (url) => {
+    if (window.toast?.info) {
+      window.toast.info("You are being redirected to an external site", {
+        duration: 2500,
+      });
+      setTimeout(() => {
+        window.open(url, "_blank");
+      }, 900);
+    } else {
+      if (window.confirm("You are about to open an external site. Continue?")) {
+        window.open(url, "_blank");
+      }
     }
+  };
+
+  const handleDownloadDorm = () => {
+    openExternal(
+      "https://expo.dev/accounts/dormhonorio/projects/DormHonorio/builds/c1ed1458-80b9-4c51-859a-db290f1ba7e5"
+    );
   };
 
   return (
@@ -57,6 +70,7 @@ export default function Works({ id }) {
 
       <div className="works-content">
         <div className="projects-grid">
+
           {/* ================= LOAN TRACKER ================= */}
           <div className="project-card">
             <div className="project-image">
@@ -66,10 +80,7 @@ export default function Works({ id }) {
                   <button
                     className="action-btn"
                     onClick={() =>
-                      window.open(
-                        "https://loan-trackerr.netlify.app/",
-                        "_blank"
-                      )
+                      openExternal("https://loan-trackerr.netlify.app/")
                     }
                     title="View Live Site"
                   >
@@ -142,9 +153,8 @@ export default function Works({ id }) {
                   <button
                     className="action-btn"
                     onClick={() =>
-                      window.open(
-                        "https://www.figma.com/proto/qHd6BKite0pmqQmJSvzAKw",
-                        "_blank"
+                      openExternal(
+                        "https://www.figma.com/proto/qHd6BKite0pmqQmJSvzAKw"
                       )
                     }
                     title="View Prototype"
@@ -183,9 +193,8 @@ export default function Works({ id }) {
                   <button
                     className="action-btn"
                     onClick={() =>
-                      window.open(
-                        "https://www.figma.com/proto/8frnL8VEIblY7EGPkcOZNq",
-                        "_blank"
+                      openExternal(
+                        "https://www.figma.com/proto/8frnL8VEIblY7EGPkcOZNq"
                       )
                     }
                     title="View Prototype"
@@ -224,9 +233,8 @@ export default function Works({ id }) {
                   <button
                     className="action-btn"
                     onClick={() =>
-                      window.open(
-                        "https://www.canva.com/design/DAGo0nSvLAs/_bNTWZDpJ76-Z_cDdcTyQg/edit?utm_content=DAGo0nSvLAs&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton",
-                        "_blank"
+                      openExternal(
+                        "https://www.canva.com/design/DAGo0nSvLAs/_bNTWZDpJ76-Z_cDdcTyQg/edit"
                       )
                     }
                     title="View Prototype"
@@ -265,10 +273,7 @@ export default function Works({ id }) {
                   <button
                     className="action-btn"
                     onClick={() =>
-                      window.open(
-                        "https://www.canva.com/design/DAGgSUUCnLI",
-                        "_blank"
-                      )
+                      openExternal("https://www.canva.com/design/DAGgSUUCnLI")
                     }
                     title="View Prototype"
                   >
@@ -306,10 +311,7 @@ export default function Works({ id }) {
                   <button
                     className="action-btn"
                     onClick={() =>
-                      window.open(
-                        "https://www.canva.com/design/DAGhHlAIK_c",
-                        "_blank"
-                      )
+                      openExternal("https://www.canva.com/design/DAGhHlAIK_c")
                     }
                     title="View Prototype"
                   >
@@ -337,6 +339,7 @@ export default function Works({ id }) {
               </div>
             </div>
           </div>
+
         </div>
       </div>
     </section>
