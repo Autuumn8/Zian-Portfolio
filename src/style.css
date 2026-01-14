@@ -393,8 +393,13 @@ body {
     border-right: 1px solid var(--border-color);
     overflow-y: auto;
     z-index: 900;
-    transform: translateX(0);
+    transform: translateX(-100%); /* Hide sidebar by default on mobile */
     transition: var(--transition);
+}
+
+/* When sidebar is open */
+.profile-sidebar.open {
+    transform: translateX(0); /* Slide in */
 }
 
 .sidebar-overlay {
