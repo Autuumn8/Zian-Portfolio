@@ -311,7 +311,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
                 <i className="fab fa-facebook-f"></i>
               </a>
               <a
-                href="https://github.com/zian"
+                href="https://github.com/Autuumn8"
                 className="social-link"
                 target="_blank"
                 rel="noreferrer"
