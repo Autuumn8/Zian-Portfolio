@@ -41,61 +41,47 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     }
   }, [open]);
 
-  /* ================= SWIPE SUPPORT ================= */
+  /* ================= SIMPLE SWIPE FROM EDGE ================= */
   useEffect(() => {
-    // Only run swipe logic on touch devices
     if (!("ontouchstart" in window)) return;
 
-    const sidebar = document.querySelector(".profile-sidebar");
-    if (!sidebar) return;
-
     let touchStartX = 0;
-    let touchCurrentX = 0;
-    let swiping = false;
+    let touchStartY = 0;
 
     const handleTouchStart = (e) => {
       touchStartX = e.touches[0].clientX;
-      touchCurrentX = touchStartX;
-      swiping = true;
-      sidebar.style.transition = "none"; // disable transition while swiping
+      touchStartY = e.touches[0].clientY;
     };
 
-    const handleTouchMove = (e) => {
-      if (!swiping) return;
-      touchCurrentX = e.touches[0].clientX;
-      const deltaX = touchCurrentX - touchStartX;
+    const handleTouchEnd = (e) => {
+      const touchEndX = e.changedTouches[0].clientX;
+      const touchEndY = e.changedTouches[0].clientY;
 
-      if (open) {
-        // Only allow swiping left to close
-        if (deltaX < 0) sidebar.style.transform = `translateX(${deltaX}px)`;
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchEndY - touchStartY;
+
+      // Ignore mostly vertical swipes
+      if (Math.abs(deltaY) > Math.abs(deltaX)) return;
+
+      // Swipe right from left edge → open sidebar
+      if (!open && touchStartX < 30 && deltaX > 50) {
+        onOpen?.();
       }
-      // Do not allow left-to-right swipe to open
-    };
 
-    const handleTouchEnd = () => {
-      if (!swiping) return;
-      swiping = false;
-      sidebar.style.transition = "transform 0.3s ease"; // restore transition
-      const deltaX = touchCurrentX - touchStartX;
-
-      if (open) {
-        if (deltaX < -80) onClose?.();
-        else sidebar.style.transform = "translateX(0)";
-      } else {
-        sidebar.style.transform = "translateX(-100%)";
+      // Swipe left on sidebar → close sidebar
+      if (open && touchStartX > 0 && deltaX < -50) {
+        onClose?.();
       }
     };
 
     window.addEventListener("touchstart", handleTouchStart);
-    window.addEventListener("touchmove", handleTouchMove);
     window.addEventListener("touchend", handleTouchEnd);
 
     return () => {
       window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleTouchEnd);
     };
-  }, [open, onClose]);
+  }, [open, onClose, onOpen]);
 
   /* ================================================= */
 
