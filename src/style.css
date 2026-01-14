@@ -1860,7 +1860,7 @@ body {
   display: flex;
   gap: 20px;
   width: max-content;
-  animation: scrollGallery 50s linear infinite;
+  animation: scrollGallery 40s linear infinite;
 }
 
 .gallery-card {

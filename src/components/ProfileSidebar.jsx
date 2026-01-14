@@ -3,9 +3,7 @@ import profileImg from "../assets/PROFILE.jpg";
 
 export default function ProfileSidebar({ open, onClose, onOpen }) {
   const [showInterests, setShowInterests] = useState(false);
-  const sidebarRef = useRef(null);
 
-  /* ================= Overlay Setup ================= */
   useEffect(() => {
     let overlay = document.querySelector(".sidebar-overlay");
     if (!overlay) {
@@ -19,7 +17,6 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     return () => overlay.removeEventListener("click", onOverlayClick);
   }, [onClose]);
 
-  /* ================= Escape Key ================= */
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape" && open) onClose?.();
@@ -28,30 +25,28 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  /* ================= Open / Close Sidebar ================= */
   useEffect(() => {
-    const sidebar = sidebarRef.current;
+    const sidebar = document.querySelector(".profile-sidebar");
     const overlay = document.querySelector(".sidebar-overlay");
     if (!sidebar) return;
 
     if (open) {
       sidebar.classList.add("open");
       overlay?.classList.add("show");
-      sidebar.style.transform = "translateX(0)";
-      sidebar.style.transition = "transform 0.3s ease";
       document.body.style.overflow = "hidden";
     } else {
       sidebar.classList.remove("open");
       overlay?.classList.remove("show");
-      sidebar.style.transform = "translateX(-100%)";
-      sidebar.style.transition = "transform 0.3s ease";
       document.body.style.overflow = "auto";
     }
   }, [open]);
 
   /* ================= SWIPE SUPPORT ================= */
   useEffect(() => {
-    const sidebar = sidebarRef.current;
+    // Only run swipe logic on touch devices
+    if (!("ontouchstart" in window)) return;
+
+    const sidebar = document.querySelector(".profile-sidebar");
     if (!sidebar) return;
 
     let touchStartX = 0;
@@ -118,7 +113,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
   const toggleInterests = () => setShowInterests((prev) => !prev);
 
   return (
-    <aside className="profile-sidebar" ref={sidebarRef} style={{ transform: "translateX(-100%)" }}>
+    <aside className="profile-sidebar">
       <style>{`
         .profile-content {
           height: 100dvh;
@@ -282,7 +277,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
           </div>
 
           <div className="profile-interests">
-            <h4 onClick={() => setShowInterests(prev => !prev)}>
+            <h4 onClick={toggleInterests}>
               <span>What I Do in My Free Time</span>
               <div className="toggle-icon">
                 <i className={`fas fa-chevron-${showInterests ? "up" : "down"}`}></i>
@@ -307,16 +302,31 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
             </button>
 
             <div className="social-links">
-              <a href="https://www.facebook.com/znxxlfnso" className="social-link" target="_blank" rel="noreferrer">
+              <a
+                href="https://www.facebook.com/znxxlfnso"
+                className="social-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <i className="fab fa-facebook-f"></i>
               </a>
-              <a href="https://github.com/zian" className="social-link" target="_blank" rel="noreferrer">
+              <a
+                href="https://github.com/zian"
+                className="social-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <i className="fab fa-github"></i>
               </a>
               <a href="mailto:zianalfonso0518@gmail.com" className="social-link">
                 <i className="fas fa-envelope"></i>
               </a>
-              <a href="https://instagram.com/znxxlfnso" className="social-link" target="_blank" rel="noreferrer">
+              <a
+                href="https://instagram.com/znxxlfnso"
+                className="social-link"
+                target="_blank"
+                rel="noreferrer"
+              >
                 <i className="fab fa-instagram"></i>
               </a>
             </div>
