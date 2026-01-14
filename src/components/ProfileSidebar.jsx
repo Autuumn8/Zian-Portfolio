@@ -3,10 +3,9 @@ import profileImg from "../assets/PROFILE.jpg";
 
 export default function ProfileSidebar({ open, onClose, onOpen }) {
   const [showInterests, setShowInterests] = useState(false);
+  const swipeRef = useRef(null);
 
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
+  /* ===================== Overlay Setup ===================== */
   useEffect(() => {
     let overlay = document.querySelector(".sidebar-overlay");
     if (!overlay) {
@@ -20,6 +19,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     return () => overlay.removeEventListener("click", onOverlayClick);
   }, [onClose]);
 
+  /* ===================== ESC Key Close ===================== */
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "Escape" && open) onClose?.();
@@ -28,6 +28,7 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
+  /* ===================== Sidebar Open/Close ===================== */
   useEffect(() => {
     const sidebar = document.querySelector(".profile-sidebar");
     const overlay = document.querySelector(".sidebar-overlay");
@@ -44,40 +45,53 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
     }
   }, [open]);
 
-  /* ================= SWIPE SUPPORT ================= */
+  /* ===================== Swipe Functionality ===================== */
   useEffect(() => {
-    const handleTouchStart = (e) => {
-      touchStartX.current = e.changedTouches[0].screenX;
+    let startX = 0;
+    let isSwiping = false;
+
+    const onTouchStart = (e) => {
+      startX = e.touches[0].clientX;
     };
 
-    const handleTouchEnd = (e) => {
-      touchEndX.current = e.changedTouches[0].screenX;
-      handleSwipe();
-    };
+    const onTouchMove = (e) => {
+      const currentX = e.touches[0].clientX;
+      const diff = currentX - startX;
 
-    const handleSwipe = () => {
-      const distance = touchEndX.current - touchStartX.current;
-
-      // swipe left → close
-      if (open && distance < -80) {
-        onClose?.();
-      }
-
-      // swipe right → open
-      if (!open && distance > 80) {
+      // Open sidebar if swipe right from left edge
+      if (!open && startX < 20 && diff > 50) {
         onOpen?.();
+        isSwiping = true;
+      }
+
+      // Close sidebar if swipe left
+      if (open && diff < -50) {
+        onClose?.();
+        isSwiping = true;
+      }
+
+      // Add swiping class for animation
+      if (swipeRef.current) {
+        if (Math.abs(diff) > 10) swipeRef.current.classList.add("swiping");
+        else swipeRef.current.classList.remove("swiping");
       }
     };
 
-    window.addEventListener("touchstart", handleTouchStart);
-    window.addEventListener("touchend", handleTouchEnd);
+    const onTouchEnd = () => {
+      if (swipeRef.current) swipeRef.current.classList.remove("swiping");
+      isSwiping = false;
+    };
+
+    document.addEventListener("touchstart", onTouchStart);
+    document.addEventListener("touchmove", onTouchMove);
+    document.addEventListener("touchend", onTouchEnd);
 
     return () => {
-      window.removeEventListener("touchstart", handleTouchStart);
-      window.removeEventListener("touchend", handleTouchEnd);
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("touchend", onTouchEnd);
     };
-  }, [open, onClose, onOpen]);
-  /* ================================================= */
+  }, [open, onOpen, onClose]);
 
   const interests = [
     { icon: "music", label: "Listening to Music" },
@@ -91,226 +105,243 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
   const toggleInterests = () => setShowInterests((prev) => !prev);
 
   return (
-    <aside className="profile-sidebar">
-      <style>{`
-        .profile-content {
-          height: 100dvh;
-          overflow-y: auto;
-          padding: 60px 24px 48px;
-        }
+    <>
+      {/* ===================== Swipe Indicator ===================== */}
+      <div
+        className={`swipe-indicator ${open ? "hidden" : ""}`}
+        ref={swipeRef}
+      >
+        <div className="swipe-handle">
+          <div className="handle-line"></div>
+        </div>
+      </div>
 
-        .profile-image-container {
-          margin-top: 50px;
-          margin-bottom: 20px;
-        }
-
-        .profile-actions {
-          margin-top: 24px;
-        }
-
-        @media (max-width: 768px) {
+      {/* ===================== Sidebar ===================== */}
+      <aside className="profile-sidebar">
+        <style>{`
           .profile-content {
-            padding-top: 80px;
-            padding-bottom: 32px;
+            height: 100dvh;
+            overflow-y: auto;
+            padding: 60px 24px 48px;
           }
 
           .profile-image-container {
-            margin-top: 12px;
-            margin-bottom: 16px;
+            margin-top: 50px;
+            margin-bottom: 20px;
           }
 
           .profile-actions {
-            margin-top: 16px;
+            margin-top: 24px;
           }
-        }
 
-        .profile-interests {
-          margin-bottom: 2rem;
-          text-align: center;
-        }
+          @media (max-width: 768px) {
+            .profile-content {
+              padding-top: 80px;
+              padding-bottom: 32px;
+            }
 
-        .profile-interests h4 {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-          font-size: 1rem;
-          font-weight: 600;
-          color: var(--text-primary);
-          cursor: pointer;
-          margin-bottom: 1rem;
-        }
+            .profile-image-container {
+              margin-top: 12px;
+              margin-bottom: 16px;
+            }
 
-        .profile-interests h4::before,
-        .profile-interests h4::after {
-          content: "";
-          flex: 1;
-          height: 1px;
-          background: var(--border-color);
-        }
+            .profile-actions {
+              margin-top: 16px;
+            }
 
-        .toggle-icon {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          width: 24px;
-          height: 24px;
-          border: 1px solid var(--border-color);
-          border-radius: 50%;
-          font-size: 0.8rem;
-          transition: transform 0.3s ease;
-        }
+            .swipe-indicator {
+              display: block;
+            }
+          }
 
-        .toggle-icon i {
-          pointer-events: none;
-        }
+          .profile-interests {
+            margin-bottom: 2rem;
+            text-align: center;
+          }
 
-        .interests-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-          gap: 12px;
-          transition: max-height 0.3s ease, opacity 0.3s ease;
-        }
+          .profile-interests h4 {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            cursor: pointer;
+            margin-bottom: 1rem;
+          }
 
-        .interests-hidden {
-          max-height: 0;
-          opacity: 0;
-          pointer-events: none;
-        }
+          .profile-interests h4::before,
+          .profile-interests h4::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--border-color);
+          }
 
-        .interest-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 6px;
-          padding: 12px 8px;
-          border: 1px solid var(--border-color);
-          border-radius: 12px;
-          font-size: 0.9rem;
-          color: var(--text-secondary);
-          background-color: var(--bg-tertiary);
-          transition: transform 0.2s ease, border-color 0.2s ease;
-        }
+          .toggle-icon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+          }
 
-        .interest-item:hover {
-          border-color: var(--primary-color);
-          transform: translateY(-2px);
-        }
+          .toggle-icon i {
+            pointer-events: none;
+          }
 
-        .interest-item i {
-          font-size: 1.3rem;
-        }
+          .interests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+          }
 
-        .music-player {
-          margin: 16px 0;
-          border-radius: 12px;
-          overflow: hidden;
-          background-color: var(--bg-tertiary);
-          border: 1px solid var(--border-color);
-        }
+          .interests-hidden {
+            max-height: 0;
+            opacity: 0;
+            pointer-events: none;
+          }
 
-        .music-player iframe {
-          width: 100%;
-          height: 80px;
-          border: none;
-        }
-      `}</style>
+          .interest-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            background-color: var(--bg-tertiary);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+          }
 
-      <div className="profile-content">
-        <div className="profile-image-container">
-          <div className="profile-image">
-            <img src={profileImg} alt="Zian Profile" id="profileImg" />
-            <div className="profile-overlay">
-              <i className="fas fa-camera"></i>
-            </div>
-          </div>
-          <div className="status-indicator"></div>
-        </div>
+          .interest-item:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+          }
 
-        <div className="profile-info">
-          <h2 className="profile-name">Zian Daovic Alfonso</h2>
+          .interest-item i {
+            font-size: 1.3rem;
+          }
 
-          <div className="profile-stats">
-            <div className="stat-item">
-              <span className="stat-number" data-target="3">5</span>
-              <span className="stat-label">Tools</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number" data-target="5">7</span>
-              <span className="stat-label">Projects</span>
-            </div>
-            <div className="stat-item">
-              <span className="stat-number" data-target="5">3</span>
-              <span className="stat-label">Skills</span>
-            </div>
-          </div>
+          .music-player {
+            margin: 16px 0;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+          }
 
-          <div className="profile-description">
-            <p>
-              A 4th-year BSIT student with a passion for technology, clean web
-              design, and interactive websites. I enjoy creating digital
-              solutions that are both functional and visually appealing.
-            </p>
-          </div>
+          .music-player iframe {
+            width: 100%;
+            height: 80px;
+            border: none;
+          }
+        `}</style>
 
-          <div className="profile-interests">
-            <h4 onClick={toggleInterests}>
-              <span>What I Do in My Free Time</span>
-              <div className="toggle-icon">
-                <i className={`fas fa-chevron-${showInterests ? "up" : "down"}`}></i>
+        <div className="profile-content">
+          <div className="profile-image-container">
+            <div className="profile-image">
+              <img src={profileImg} alt="Zian Profile" id="profileImg" />
+              <div className="profile-overlay">
+                <i className="fas fa-camera"></i>
               </div>
-            </h4>
-            <div className={`interests-grid ${showInterests ? "" : "interests-hidden"}`}>
-              {interests.map((i, idx) => (
-                <div key={idx} className="interest-item">
-                  <i className={`fas fa-${i.icon}`}></i>
-                  <span>{i.label}</span>
-                </div>
-              ))}
             </div>
+            <div className="status-indicator"></div>
           </div>
 
-          <div className="profile-actions">
-            <button
-              className="btn btn-primary"
-              onClick={() => window.downloadResume?.()}
-            >
-              <i className="fas fa-download"></i> Download Resume
-            </button>
+          <div className="profile-info">
+            <h2 className="profile-name">Zian Daovic Alfonso</h2>
 
-            <div className="social-links">
-              <a
-                href="https://www.facebook.com/znxxlfnso"
-                className="social-link"
-                target="_blank"
-                rel="noreferrer"
+            <div className="profile-stats">
+              <div className="stat-item">
+                <span className="stat-number" data-target="3">5</span>
+                <span className="stat-label">Tools</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number" data-target="5">7</span>
+                <span className="stat-label">Projects</span>
+              </div>
+              <div className="stat-item">
+                <span className="stat-number" data-target="5">3</span>
+                <span className="stat-label">Skills</span>
+              </div>
+            </div>
+
+            <div className="profile-description">
+              <p>
+                A 4th-year BSIT student with a passion for technology, clean web
+                design, and interactive websites. I enjoy creating digital
+                solutions that are both functional and visually appealing.
+              </p>
+            </div>
+
+            <div className="profile-interests">
+              <h4 onClick={toggleInterests}>
+                <span>What I Do in My Free Time</span>
+                <div className="toggle-icon">
+                  <i className={`fas fa-chevron-${showInterests ? "up" : "down"}`}></i>
+                </div>
+              </h4>
+              <div className={`interests-grid ${showInterests ? "" : "interests-hidden"}`}>
+                {interests.map((i, idx) => (
+                  <div key={idx} className="interest-item">
+                    <i className={`fas fa-${i.icon}`}></i>
+                    <span>{i.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="profile-actions">
+              <button
+                className="btn btn-primary"
+                onClick={() => window.downloadResume?.()}
               >
-                <i className="fab fa-facebook-f"></i>
-              </a>
-              <a
-                href="https://github.com/zian"
-                className="social-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="fab fa-github"></i>
-              </a>
-              <a href="mailto:zianalfonso0518@gmail.com" className="social-link">
-                <i className="fas fa-envelope"></i>
-              </a>
-              <a
-                href="https://instagram.com/znxxlfnso"
-                className="social-link"
-                target="_blank"
-                rel="noreferrer"
-              >
-                <i className="fab fa-instagram"></i>
-              </a>
+                <i className="fas fa-download"></i> Download Resume
+              </button>
+
+              <div className="social-links">
+                <a
+                  href="https://www.facebook.com/znxxlfnso"
+                  className="social-link"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <i className="fab fa-facebook-f"></i>
+                </a>
+                <a
+                  href="https://github.com/zian"
+                  className="social-link"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <i className="fab fa-github"></i>
+                </a>
+                <a href="mailto:zianalfonso0518@gmail.com" className="social-link">
+                  <i className="fas fa-envelope"></i>
+                </a>
+                <a
+                  href="https://instagram.com/znxxlfnso"
+                  className="social-link"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <i className="fab fa-instagram"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </aside>
+      </aside>
+    </>
   );
 }
