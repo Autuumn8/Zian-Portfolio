@@ -89,7 +89,7 @@ export default function Education({ id }) {
 
       <div className="education-content">
         <div className="education-item">
-          <div className="education-year">2021 - 2025</div>
+          <div className="education-year">2022 - 2026</div>
           <div className="education-details">
             <h3>Bachelor of Science in Information Technology</h3>
             <p className="education-school">Pampanga State University</p>
@@ -105,7 +105,7 @@ export default function Education({ id }) {
         </div>
 
         <div className="education-item">
-          <div className="education-year">2019 - 2021</div>
+          <div className="education-year">2020 - 2022</div>
           <div className="education-details">
             <h3>Senior High School - STEM Strand</h3>
             <p className="education-school">San Juan High School</p>
