@@ -119,7 +119,7 @@ export default function Contact({ id }) {
           <div className="contact-methods">
             <div className="contact-method">
               <i className="fas fa-envelope"></i>
-              <span>zianalfonso0518@gmai.com</span>
+              <span>zianalfonso0518@gmail.com</span>
             </div>
             <div className="contact-method">
               <i className="fas fa-phone"></i>
