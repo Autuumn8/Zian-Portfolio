@@ -7,7 +7,7 @@ export default function Home() {
     const typingElement = document.getElementById("typingText");
     if (!typingElement) return;
 
-    const texts = ["Frontend Developer", "UI/UX Designer"];
+    const texts = ["Frontend Developer", "UI/UX Designer", "IT Support Specialist"];
     let textIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
