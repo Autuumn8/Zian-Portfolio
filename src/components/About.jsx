@@ -53,7 +53,7 @@ export default function About({ id }) {
         <div className="about-text">
           <h3>Let me introduce myself</h3>
           <p>
-            I'm a 4th-year BSIT student who enjoys building websites, designing
+            I'm a BSIT graduate who enjoys building websites, designing
             graphics, and working with tech. I've had hands-on experience in IT
             support, helping resolve hardware, software, and network issues while
             also contributing to UI/UX improvements in internal systems.
