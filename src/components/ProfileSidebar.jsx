@@ -313,12 +313,12 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
                 <i className="fas fa-envelope"></i>
               </a>
               <a
-                href="https://instagram.com/znxxlfnso"
+                href="https://www.linkedin.com/in/zianalfonso/"
                 className="social-link"
                 target="_blank"
                 rel="noreferrer"
               >
-                <i className="fab fa-instagram"></i>
+                <i className="fab fa-linkedin-in"></i>
               </a>
             </div>
           </div>

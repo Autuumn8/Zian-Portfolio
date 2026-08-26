@@ -4,43 +4,48 @@ export default function Home() {
   const typingRef = useRef(null);
 
   useEffect(() => {
-    const typingElement = document.getElementById("typingText");
-    if (!typingElement) return;
+    const el = document.getElementById("typingText");
+    if (!el) return;
 
-    const texts = ["Full Stack Developer", "UI/UX Designer", "IT Support Specialist"];
+    const texts = ["Full Stack Developer", "Graphic Designer", "IT Support", "UI/UX Designer"];
     let textIndex = 0;
     let charIndex = 0;
-    let isDeleting = false;
-    let timeout;
+    let deleting = false;
+    let timer = null;
+    let active = true;
 
-    const typeText = () => {
-      const currentText = texts[textIndex];
+    function tick() {
+      if (!active) return;
+      const word = texts[textIndex];
 
-      if (isDeleting) {
-        typingElement.textContent = currentText.substring(0, charIndex - 1);
-        charIndex--;
-      } else {
-        typingElement.textContent = currentText.substring(0, charIndex + 1);
+      if (!deleting) {
         charIndex++;
+        el.textContent = word.substring(0, charIndex);
+        if (charIndex === word.length) {
+          deleting = true;
+          timer = setTimeout(tick, 2000);
+        } else {
+          timer = setTimeout(tick, 100);
+        }
+      } else {
+        charIndex--;
+        el.textContent = word.substring(0, charIndex);
+        if (charIndex === 0) {
+          deleting = false;
+          textIndex = (textIndex + 1) % texts.length;
+          timer = setTimeout(tick, 500);
+        } else {
+          timer = setTimeout(tick, 50);
+        }
       }
+    }
 
-      let typeSpeed = 100;
-      if (isDeleting) typeSpeed /= 2;
-
-      if (!isDeleting && charIndex === currentText.length) {
-        typeSpeed = 2000;
-        isDeleting = true;
-      } else if (isDeleting && charIndex === 0) {
-        isDeleting = false;
-        textIndex = (textIndex + 1) % texts.length;
-        typeSpeed = 500;
-      }
-
-      timeout = setTimeout(typeText, typeSpeed);
+    el.textContent = "";
+    timer = setTimeout(tick, 500);
+    return () => {
+      active = false;
+      clearTimeout(timer);
     };
-
-    timeout = setTimeout(typeText, 500);
-    return () => clearTimeout(timeout);
   }, []);
 
   // Floating animation (works on desktop & mobile)
@@ -127,7 +132,7 @@ export default function Home() {
 
           <h1 className="hero-title">
             <span className="title-sub" id="typingText" ref={typingRef}>
-              Frontend Developer
+              Full Stack Developer
             </span>
           </h1>
 

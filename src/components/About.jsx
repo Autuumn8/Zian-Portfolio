@@ -140,6 +140,18 @@ export default function About({ id }) {
                     <div className="skill-progress" data-width="100%"></div>
                   </div>
                 </div>
+                <div className="skill-item animate-in">
+                  <span className="skill-name">Photoshop</span>
+                  <div className="skill-bar">
+                    <div className="skill-progress" data-width="75%" style={{ width: "75%" }}></div>
+                  </div>
+                </div>
+                <div className="skill-item animate-in">
+                  <span className="skill-name">Illustrator</span>
+                  <div className="skill-bar">
+                    <div className="skill-progress" data-width="50%" style={{ width: "50%" }}></div>
+                  </div>
+                </div>
               </div>
             </div>
 
