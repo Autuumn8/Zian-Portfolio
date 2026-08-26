@@ -137,10 +137,9 @@ export default function Home() {
           </h1>
 
           <p className="hero-description">
-            I create <span className="highlight">beautiful</span> and{" "}
-            <span className="highlight">functional</span> web experiences that
-            engage users and drive results. Let's build something amazing
-            together.
+            I enjoy building websites, designing graphics, and helping with IT.
+            I care about writing <span className="highlight">clean code</span>{" "}
+            and making things that actually <span className="highlight">look great</span>.
           </p>
 
           <div className="hero-buttons">
@@ -178,7 +177,16 @@ export default function Home() {
               <i className="fab fa-figma"></i>
             </div>
             <div className="float-item" data-speed="0.7">
-              <i className="devicon-typescript-plain colored"></i>
+              <i className="devicon-typescript-plain"></i>
+            </div>
+            <div className="float-item" data-speed="0.5">
+              <i className="devicon-photoshop-plain"></i>
+            </div>
+            <div className="float-item" data-speed="0.9">
+              <i className="devicon-illustrator-plain"></i>
+            </div>
+            <div className="float-item" data-speed="0.35">
+              <i className="devicon-git-plain"></i>
             </div>
           </div>
         </div>

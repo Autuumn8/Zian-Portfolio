@@ -254,9 +254,11 @@ export default function ProfileSidebar({ open, onClose, onOpen }) {
 
           <div className="profile-description">
             <p>
-              A 4th-year BSIT student with a passion for technology, clean web
-              design, and interactive websites. I enjoy creating digital
-              solutions that are both functional and visually appealing.
+              A BSIT graduate with a passion for UI/UX design, clean web
+              design, and interactive digital experiences. With a background in
+              IT and design, I enjoy creating solutions that are both functional
+              and visually appealing. I'm always eager to learn, explore new
+              ideas, and turn them into meaningful experiences.
             </p>
           </div>
 

@@ -53,18 +53,27 @@ export default function About({ id }) {
         <div className="about-text">
           <h3>Let me introduce myself</h3>
           <p>
-            I'm a passionate BSIT student with a strong foundation in web
-            development and a keen eye for design. I love creating digital
-            experiences that combine functionality with beautiful aesthetics.
+            I'm a 4th-year BSIT student who enjoys building websites, designing
+            graphics, and working with tech. I've had hands-on experience in IT
+            support, helping resolve hardware, software, and network issues while
+            also contributing to UI/UX improvements in internal systems.
           </p>
           <p>
-            My journey started with curiosity about how websites work, and it
-            has evolved into a passion for crafting solutions that make a
-            difference. I believe in continuous learning and staying up-to-date
-            with the latest technologies.
+            I like wearing multiple hats — whether it's writing code, creating
+            visuals in Figma or Photoshop, or troubleshooting tech problems.
+            I'm always up for learning something new.
           </p>
 
           <div className="experience-highlights">
+            <div className="highlight-item">
+              <div className="highlight-icon">
+                <i className="fas fa-paint-brush"></i>
+              </div>
+              <div className="highlight-content">
+                <h4>Visual Design</h4>
+                <p>Designing graphics and interfaces using Figma, Photoshop, and Illustrator.</p>
+              </div>
+            </div>
             <div className="highlight-item">
               <div className="highlight-icon">
                 <i className="fas fa-code"></i>
@@ -76,20 +85,11 @@ export default function About({ id }) {
             </div>
             <div className="highlight-item">
               <div className="highlight-icon">
-                <i className="fas fa-mobile-alt"></i>
+                <i className="fas fa-tools"></i>
               </div>
               <div className="highlight-content">
-                <h4>Responsive Design</h4>
-                <p>Creating websites that work perfectly on all devices and screen sizes.</p>
-              </div>
-            </div>
-            <div className="highlight-item">
-              <div className="highlight-icon">
-                <i className="fas fa-users"></i>
-              </div>
-              <div className="highlight-content">
-                <h4>User-Centered</h4>
-                <p>Focusing on user experience and creating intuitive interfaces.</p>
+                <h4>IT Support</h4>
+                <p>Hands-on experience resolving hardware, software, and network issues.</p>
               </div>
             </div>
           </div>
